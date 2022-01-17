@@ -1,13 +1,14 @@
 import pygame
 from settings import *
-from map import world_map
+import math
 
 
-def mapping(a, b):
-    return (a // TILE) * TILE, (b // TILE) * TILE
+def mapping(x, y):
+    """Return the corresponding tile position"""
+    return (x // TILE) * TILE, (y // TILE) * TILE
 
-
-def ray_casting(sc, player_pos, player_angle, textures):
+def ray_casting(sc, player_pos, player_angle, textures, world_map):
+    texture_v, texture_h = '1', '1'
     ox, oy = player_pos
     xm, ym = mapping(ox, oy)
     cur_angle = player_angle - HALF_FOV
@@ -15,7 +16,7 @@ def ray_casting(sc, player_pos, player_angle, textures):
         sin_a = math.sin(cur_angle)
         cos_a = math.cos(cur_angle)
 
-        # vertivals
+        # verticals
         x, dx = (xm + TILE, 1) if cos_a >= 0 else (xm, -1)
         for i in range(0, WIDTH, TILE):
             depth_v = (x - ox) / cos_a
@@ -26,7 +27,7 @@ def ray_casting(sc, player_pos, player_angle, textures):
                 break
             x += dx * TILE
 
-        # horizontals
+        # horizontal
         y, dy = (ym + TILE, 1) if sin_a >= 0 else (ym, -1)
         for i in range(0, HEIGHT, TILE):
             depth_h = (y - oy) / sin_a
@@ -38,14 +39,26 @@ def ray_casting(sc, player_pos, player_angle, textures):
             y += dy * TILE
 
         # projection
-        depth, offset, texture = (depth_v, yv, texture_v) if depth_v < depth_h else (depth_h, xh, texture_h)
+        depth, offset, texture = (
+            (depth_v, yv, texture_v)
+            if depth_v < depth_h
+            else (depth_h, xh, texture_h)
+        )
+
+
         offset = int(offset) % TILE
         depth *= math.cos(player_angle - cur_angle)
         depth = max(depth, 0.00001)
         proj_height = min(int(PTOJ_COEFF / depth), 2 * HEIGHT)
 
-        wall_column = textures[texture].subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
+        wall_column = textures[texture].subsurface(
+            offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT
+        )
         wall_column = pygame.transform.scale(wall_column, (SCALE, proj_height))
         sc.blit(wall_column, (ray * SCALE, HALF_HEIGHT - proj_height // 2))
 
         cur_angle += DELTA_ANGLE
+
+        if texture == 'E':
+            return False
+

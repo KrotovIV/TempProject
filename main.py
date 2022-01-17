@@ -2,28 +2,51 @@ import pygame
 from settings import *
 from player import Player
 import math
-from map import world_map
+from map import Map
 from drawing import Drawing
+import time
 
-pygame.init()
-sc = pygame.display.set_mode((WIDTH, HEIGHT))
-sc_map = pygame.Surface((WIDTH // MAP_SCALE, HEIGHT // MAP_SCALE))
-clock = pygame.time.Clock()
-player = Player()
-drawing = Drawing(sc, sc_map)
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            exit()
 
-    player.movement()
-    sc.fill(BLACK)
+if __name__ == "__main__":
+    pygame.init()
+    sc = pygame.display.set_mode((WIDTH, HEIGHT))
+    level = 0
+    while True:
+        LABYRINTH_SIZE = (LABYRINTH_SIZE[0] + 2, LABYRINTH_SIZE[1] + 2)
+        map_ = Map()
+        world_map, player_pos = map_.labyrinth(LABYRINTH_SIZE)
+        level += 1
+        clock = pygame.time.Clock()
+        drawing = Drawing(sc, world_map)
+        if level == 1:
+            while True:
+                if not drawing.menu():
+                    break
+        drawing.level(level)
+        pygame.display.flip()
+        time.sleep(1)
+        player = Player(player_pos, world_map)
+        running = True
 
-    drawing.background(player.angle)
-    drawing.world(player.pos(), player.angle)
-    drawing.fps(clock)
-    drawing.mini_map(player)
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_c]:
+                        running = False
 
-    pygame.display.flip()
-    clock.tick(FPS)
+
+
+            player.movement()
+            sc.fill(GREY)
+
+            drawing.background(player.angle)
+            if drawing.world(player.pos(), player.angle) is False:
+                running = False
+            drawing.fps(clock)
+
+            pygame.display.flip()
+            clock.tick(FPS)
