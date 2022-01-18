@@ -54,9 +54,16 @@ class Player:
         new_y = self.y + delta_y
 
         # check collision
-        if mapping(new_x, self.y) in self.world_map:
+        mp_x = mapping(self.x + delta_x * 10, self.y)
+        if mp_x in self.world_map:
+            if self.world_map[mp_x] == "E":
+                return False
             new_x = self.x
-        if mapping(self.x, new_y) in self.world_map:
+
+        mp_y = mapping(self.x, self.y + delta_y * 10)
+        if mp_y in self.world_map:
+            if self.world_map[mp_y] == "E":
+                return False
             new_y = self.y
 
         self.x = new_x

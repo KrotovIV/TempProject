@@ -9,12 +9,12 @@ FPS = 60
 TILE = 100
 FPS_POS = (WIDTH - 65, 5)
 
-#labyrinth settings
+# labyrinth settings
 STRAIGHT_PATH_COEFF = 3
 PLAYER_TO_EXIT_LENGTH = 15
 LABYRINTH_SIZE = (20, 20)
 
-# texture settings (1200, 1200)
+# texture settings
 TEXTURE_WIDTH = 100
 TEXTURE_HEIGHT = 100
 TEXTURE_SCALE = TEXTURE_WIDTH // TILE
@@ -28,7 +28,6 @@ MAP_POS = (0, HEIGHT - HEIGHT // MAP_SCALE)
 FOV = math.pi / 3
 HALF_FOV = FOV / 2
 NUM_RAYS = 300
-MAX_DEPTH = 800
 DELTA_ANGLE = FOV / NUM_RAYS
 DIST = NUM_RAYS / (2 * math.tan(HALF_FOV))
 PTOJ_COEFF = 3 * DIST * TILE
@@ -37,7 +36,7 @@ POOL_SIZE = 5
 TIME_TO_RETURN_FALSE = 5
 TIMER_SECONDS = 0
 
-#level num label
+# level num label
 LEVEL_POS = (HALF_WIDTH // 1.5, HALF_HEIGHT // 1.5 + 25)
 
 # player settings

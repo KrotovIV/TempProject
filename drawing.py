@@ -13,7 +13,8 @@ class Drawing:
             "1": pygame.image.load("img/1.png").convert(),
             "2": pygame.image.load("img/2.png").convert(),
             "S": pygame.image.load("img/sky.png").convert(),
-            'E':pygame.image.load("img/E.png").convert()
+            " ": pygame.image.load("img/fog.png").convert(),
+            "E": pygame.image.load("img/E.png").convert(),
         }
 
     def background(self, angle):
@@ -28,8 +29,14 @@ class Drawing:
         )
 
     def world(self, player_pos, player_angle):
-        if ray_casting(self.sc, player_pos, player_angle, self.textures, self.world_map) is False:
-            return False
+        ray_casting(
+            self.sc,
+            player_pos,
+            player_angle,
+            self.textures,
+            self.world_map,
+        )
+
 
     def fps(self, clock):
         display_fps = str(int(clock.get_fps()))
@@ -38,7 +45,7 @@ class Drawing:
 
     def level(self, level):
         self.sc.fill(GREY)
-        display_level = 'level ' + str(level)
+        display_level = "level " + str(level)
         render = self.font2.render(display_level, False, GREEN)
         self.sc.blit(render, LEVEL_POS)
 
@@ -46,7 +53,7 @@ class Drawing:
         self.sc.fill(GREEN)
         rect = pygame.Rect(*self.sc.get_rect().center, 0, 0).inflate(200, 100)
 
-        display= 'LABYRINTH'
+        display = "LABYRINTH"
         render = self.font2.render(display, False, YELLOW)
         self.sc.blit(render, (120, 100))
 
@@ -66,7 +73,7 @@ class Drawing:
 
             pygame.draw.rect(self.sc, color, rect)
 
-            display = 'Играть '
+            display = "Играть "
             render = self.font.render(display, False, BLACK)
             self.sc.blit(render, (540, 380))
 

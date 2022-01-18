@@ -7,15 +7,14 @@ from drawing import Drawing
 import time
 
 
-
 if __name__ == "__main__":
     pygame.init()
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
     level = 0
     while True:
         LABYRINTH_SIZE = (LABYRINTH_SIZE[0] + 2, LABYRINTH_SIZE[1] + 2)
-        map_ = Map()
-        world_map, player_pos = map_.labyrinth(LABYRINTH_SIZE)
+        map = Map()
+        world_map, player_pos = map.labyrinth(LABYRINTH_SIZE)
         level += 1
         clock = pygame.time.Clock()
         drawing = Drawing(sc, world_map)
@@ -37,15 +36,14 @@ if __name__ == "__main__":
                     keys = pygame.key.get_pressed()
                     if keys[pygame.K_c]:
                         running = False
-
-
-
-            player.movement()
+            
+            if player.movement() is False:
+                running = False
+            
             sc.fill(GREY)
 
             drawing.background(player.angle)
-            if drawing.world(player.pos(), player.angle) is False:
-                running = False
+            drawing.world(player.pos(), player.angle)
             drawing.fps(clock)
 
             pygame.display.flip()
