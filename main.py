@@ -10,6 +10,13 @@ import time
 
 if __name__ == "__main__":
     pygame.init()
+
+    pygame.mixer.music.load('sounds/bg-music.mp3')
+    pygame.mixer.music.set_volume(0.05)
+    pygame.mixer.music.play(loops=999999)
+
+
+
     sc = pygame.display.set_mode((WIDTH, HEIGHT))
     level = 0
     while True:

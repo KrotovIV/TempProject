@@ -7,6 +7,7 @@ def mapping(x, y):
     """Return the corresponding tile position"""
     return (x // TILE) * TILE, (y // TILE) * TILE
 
+
 def ray_casting(sc, player_pos, player_angle, textures, world_map):
     texture_v, texture_h = '1', '1'
     ox, oy = player_pos
@@ -45,7 +46,6 @@ def ray_casting(sc, player_pos, player_angle, textures, world_map):
             else (depth_h, xh, texture_h)
         )
 
-
         offset = int(offset) % TILE
         depth *= math.cos(player_angle - cur_angle)
         depth = max(depth, 0.00001)
@@ -61,4 +61,3 @@ def ray_casting(sc, player_pos, player_angle, textures, world_map):
 
         if texture == 'E':
             return False
-
