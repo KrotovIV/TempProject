@@ -63,3 +63,9 @@ def ray_casting(sc, player_pos, player_angle, textures, world_map):
         sc.blit(wall_column, (ray * SCALE, HALF_HEIGHT - proj_height // 2))
 
         cur_angle += DELTA_ANGLE
+<<<<<<< HEAD
+=======
+
+        if texture == 'E':
+            return False
+>>>>>>> 6c352d9e66a762ee2f8c4e5b24697a3aab352c71
