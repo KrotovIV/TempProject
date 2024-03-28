@@ -1,11 +1,7 @@
-import pygame
 from settings import *
+from tools import *
+import pygame
 import math
-
-
-def mapping(x, y):
-    """Return the corresponding tile position"""
-    return (x // TILE) * TILE, (y // TILE) * TILE
 
 
 def ray_casting(sc, player_pos, player_angle, textures, world_map):

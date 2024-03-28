@@ -1,4 +1,5 @@
 import math
+import pygame
 
 # game settings
 WIDTH = 1200
@@ -19,11 +20,6 @@ TEXTURE_WIDTH = 100
 TEXTURE_HEIGHT = 100
 TEXTURE_SCALE = TEXTURE_WIDTH // TILE
 
-# minimap settings
-MAP_SCALE = 5
-MAP_TILE = TILE // MAP_SCALE
-MAP_POS = (0, HEIGHT - HEIGHT // MAP_SCALE)
-
 # ray casting settings
 FOV = math.pi / 3
 HALF_FOV = FOV / 2
@@ -37,26 +33,39 @@ TIME_TO_RETURN_FALSE = 5
 TIMER_SECONDS = 0
 
 # level num label
-LEVEL_POS = (HALF_WIDTH // 1.5, HALF_HEIGHT // 1.5 + 25)
+LEVEL_POS = (HALF_WIDTH // 1.5, HALF_HEIGHT // 1.5 + HEIGHT // 32)
 
 # player settings
-PLAYER_ANGLE = 0
-
 PLAYER_BASE_SPEED = 3
 PLAYER_BASE_TURN_SPEED = 0.025
 
 PLAYER_SPEED_MOD = 2
 PLAYER_TURN_SPEED_MOD = 2
 
+# keys
+RUN_KEY = pygame.K_LSHIFT
+GO_FORWARD_KEY = pygame.K_w
+GO_BACK_KEY = pygame.K_s
+GO_LEFT_KEY = pygame.K_a
+GO_RIGHT_KEY = pygame.K_d
+TURN_LEFT_KEY = pygame.K_LEFT
+TURN_RIGHT_KEY = pygame.K_RIGHT
+SKIP_LEVEL_KEY = pygame.K_c
+
 # colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (220, 0, 0)
-GREEN = (0, 80, 0)
-BLUE = (0, 0, 220)
-DARKGREY = (110, 110, 110)
-PURPLE = (120, 0, 120)
-SKYBLUE = (0, 186, 255)
-YELLOW = (220, 220, 0)
-SANDY = (244, 164, 96)
-GREY = (220, 220, 220)
+COLORS = {
+    "BLACK": (0, 0, 0),
+    "WHITE": (255, 255, 255),
+    "RED": (220, 0, 0),
+    "GREEN": (0, 80, 0),
+    "BLUE": (0, 0, 220),
+    "DARKGREY": (110, 110, 110),
+    "PURPLE": (120, 0, 120),
+    "SKYBLUE": (0, 186, 255),
+    "YELLOW": (220, 220, 0),
+    "SANDY": (244, 164, 96),
+    "GREY": (220, 220, 220)
+}
+
+# music
+BG_MUSIC = 'sounds/bg-music.mp3'

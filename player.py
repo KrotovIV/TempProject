@@ -1,70 +1,37 @@
-from settings import *
-import pygame
-import math
-
-
-def mapping(x, y):
-    """Return the corresponding tile position"""
-    return (x // TILE) * TILE, (y // TILE) * TILE
-
-
 class Player:
-    def __init__(self, pos, world_map):
-        self.world_map = world_map
-        self.x, self.y = pos
-        self.angle = PLAYER_ANGLE
+    def __init__(self, pos):
+        self._x, self._y = pos
+        self._angle = 0
 
+    @property
+    def x(self):
+        return self._x
+    
+    @property
+    def y(self):
+        return self._y
+
+    @property
     def pos(self):
-        return self.x, self.y
+        return self._x, self._y
+    
+    @property
+    def angle(self):
+        return self._angle
+    
+    @x.setter
+    def x(self, x):
+        self._x = x
 
-    def movement(self):
-        sin_a = math.sin(self.angle)
-        cos_a = math.cos(self.angle)
-        keys = pygame.key.get_pressed()
+    @y.setter
+    def y(self, y):
+        self._y = y
 
-        speed = PLAYER_BASE_SPEED
-        turn_speed = PLAYER_BASE_TURN_SPEED
-        if keys[pygame.K_LSHIFT]:
-            speed *= PLAYER_SPEED_MOD
-            turn_speed *= PLAYER_TURN_SPEED_MOD
+    @pos.setter
+    def pos(self, x, y):
+        self.x = x
+        self.y = y
 
-        delta_x = 0
-        delta_y = 0
-        if keys[pygame.K_w]:
-            delta_x += speed * cos_a
-            delta_y += speed * sin_a
-        elif keys[pygame.K_s]:
-            new_pos_delta = (cos_a, sin_a)
-            delta_x += -speed * cos_a
-            delta_y += -speed * sin_a
-        if keys[pygame.K_a]:
-            new_pos_delta = (cos_a, sin_a)
-            delta_x += speed * sin_a
-            delta_y += -speed * cos_a
-        elif keys[pygame.K_d]:
-            new_pos_delta = (cos_a, sin_a)
-            delta_x += -speed * sin_a
-            delta_y += speed * cos_a
-        if keys[pygame.K_LEFT] or keys[pygame.K_q]:
-            self.angle -= turn_speed
-        elif keys[pygame.K_RIGHT] or keys[pygame.K_e]:
-            self.angle += turn_speed
-
-        new_x = self.x + delta_x
-        new_y = self.y + delta_y
-
-        # check collision
-        mp_x = mapping(self.x + delta_x * 10, self.y)
-        if mp_x in self.world_map:
-            if self.world_map[mp_x] == "E":
-                return False
-            new_x = self.x
-
-        mp_y = mapping(self.x, self.y + delta_y * 10)
-        if mp_y in self.world_map:
-            if self.world_map[mp_y] == "E":
-                return False
-            new_y = self.y
-
-        self.x = new_x
-        self.y = new_y
+    @angle.setter
+    def angle(self, value):
+        self._angle = value

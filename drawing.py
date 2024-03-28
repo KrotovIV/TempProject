@@ -1,80 +1,72 @@
-import pygame
 from settings import *
 from ray_casting import ray_casting
-
+from textures import parse_textures
+import pygame
 
 class Drawing:
-    def __init__(self, sc, world_map):
-        self.world_map = world_map
-        self.sc = sc
+    def __init__(self, screen, controller):
+        self.screen = screen
         self.font = pygame.font.SysFont("Arial", 36, bold=True)
         self.font2 = pygame.font.SysFont("bell", 136, bold=True)
-        self.textures = {
-            "1": pygame.image.load("img/1.png").convert(),
-            "2": pygame.image.load("img/2.png").convert(),
-            "S": pygame.image.load("img/sky.png").convert(),
-            " ": pygame.image.load("img/fog.png").convert(),
-            "E": pygame.image.load("img/E.png").convert(),
-        }
+        self.textures = parse_textures()
+        self.controller = controller
 
     def background(self, angle):
         # sky
         sky_offset = -5 * math.degrees(angle) % WIDTH
-        self.sc.blit(self.textures["S"], (sky_offset, 0))
-        self.sc.blit(self.textures["S"], (sky_offset - WIDTH, 0))
-        self.sc.blit(self.textures["S"], (sky_offset + WIDTH, 0))
+        self.screen.blit(self.textures["S"], (sky_offset, 0))
+        self.screen.blit(self.textures["S"], (sky_offset - WIDTH, 0))
+        self.screen.blit(self.textures["S"], (sky_offset + WIDTH, 0))
+
         # ground
         pygame.draw.rect(
-            self.sc, DARKGREY, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT)
+            self.screen, COLORS["DARKGREY"], (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT)
         )
 
-    def world(self, player_pos, player_angle):
+    def world(self, player_pos, player_angle, world_map):
         ray_casting(
-            self.sc,
+            self.screen,
             player_pos,
             player_angle,
             self.textures,
-            self.world_map,
+            world_map,
         )
-
 
     def fps(self, clock):
         display_fps = str(int(clock.get_fps()))
-        render = self.font.render(display_fps, False, RED)
-        self.sc.blit(render, FPS_POS)
+        render = self.font.render(display_fps, False, COLORS["RED"])
+        self.screen.blit(render, FPS_POS)
 
     def level(self, level):
-        self.sc.fill(GREY)
+        self.screen.fill(COLORS["GREY"])
         display_level = "level " + str(level)
-        render = self.font2.render(display_level, False, GREEN)
-        self.sc.blit(render, LEVEL_POS)
+        render = self.font2.render(display_level, False, COLORS["GREEN"])
+        self.screen.blit(render, LEVEL_POS)
 
     def menu(self):
-        self.sc.fill(GREEN)
-        rect = pygame.Rect(*self.sc.get_rect().center, 0, 0).inflate(200, 100)
+        self.screen.fill(COLORS["GREEN"])
+        rect = pygame.Rect(*self.screen.get_rect().center, 0, 0).inflate(200, 100)
 
         display = "LABYRINTH"
-        render = self.font2.render(display, False, YELLOW)
-        self.sc.blit(render, (120, 100))
+        render = self.font2.render(display, False, COLORS["YELLOW"])
+        self.screen.blit(render, (120, 100))
 
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit()
+            events = pygame.event.get()
 
-                collide = rect.collidepoint(pygame.mouse.get_pos())
-                if collide:
-                    color = (255, 0, 0)
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if event.button == 1:
-                            return False
-                if not collide:
-                    color = (255, 255, 255)
+            self.controller.handle_quit(events)
 
-            pygame.draw.rect(self.sc, color, rect)
+            if self.controller.collide_with_mouse(rect):
+                color = (255, 0, 0)
+                if (self.controller.left_mousebutton_pressed(events)):
+                    return False
+            else:
+                color = (255, 255, 255)
 
-            display = "Играть "
-            render = self.font.render(display, False, BLACK)
-            self.sc.blit(render, (540, 380))
+            pygame.draw.rect(self.screen, color, rect)
+
+            display = "Играть"
+            render = self.font.render(display, False, COLORS["BLACK"])
+            self.screen.blit(render, (540, 380))
 
             pygame.display.flip()
